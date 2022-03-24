@@ -2,7 +2,9 @@
 
 ## Clone project
 
-`npm start`
+## Install deps
+
+`npm i`
 
 ## Start foobractory
 
