@@ -8,11 +8,11 @@ const ACTION = {
 };
 
 const MAX_ROBOTS = 20;
-const MOVE_DELAY = 5000;
-const MINING_FOO_DELAY = 1000;
-const MINING_BAR_DELAY = 1000;
-const ASSEMBLING_FOOBAR_DELAY = 2000;
-let nbRobots = 1;
+const MOVE_DELAY = 5000 / 10;
+const MINING_FOO_DELAY = 1000 / 10;
+const MINING_BAR_DELAY = 1000 / 10;
+const ASSEMBLING_FOOBAR_DELAY = 2000 / 10;
+let nbRobots = 2;
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 const move = () => delay(MOVE_DELAY);
@@ -168,23 +168,27 @@ const start = (robot) => {
   });
 };
 
-const init = (robot) => {
-  start(robot)
-    .then(() => {
-      nbRobots++;
-      console.log(`✨  🤖 - ${nbRobots}  ✨`);
-      if (nbRobots === MAX_ROBOTS) {
-        return;
-      }
-      init(robot);
-      init(FoobarRobotFactory.makeFoobarRobot(nbRobots));
-    })
-    .catch(() => {
-      if (nbRobots === MAX_ROBOTS) {
-        console.log(`Done ! ${nbRobots} has been built`);
-        console.log(`✨ ${new Array(nbRobots).fill(` 🤖`).join(" ")} ✨`);
-      }
-    });
+const init = (robots) => {
+  for (const robot of robots) {
+    start(robot)
+      .then(() => {
+        nbRobots++;
+        console.log(`✨  🤖 - ${nbRobots}  ✨`);
+        if (nbRobots === MAX_ROBOTS) {
+          return;
+        }
+        init([robot, FoobarRobotFactory.makeFoobarRobot(nbRobots)]);
+      })
+      .catch(() => {
+        if (nbRobots === MAX_ROBOTS) {
+          console.log(`Done ! ${nbRobots} has been built`);
+          console.log(`✨ ${new Array(nbRobots).fill(` 🤖`).join(" ")} ✨`);
+        }
+      });
+  }
 };
 
-init(FoobarRobotFactory.makeFoobarRobot(nbRobots));
+init([
+  FoobarRobotFactory.makeFoobarRobot(1),
+  FoobarRobotFactory.makeFoobarRobot(2),
+]);
